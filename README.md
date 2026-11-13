@@ -50,3 +50,9 @@ The derived metrics are `homeless_per_1000_enrolled`, `homeless_per_100_poor_chi
 - Counts are cumulative: a student is counted if they were homeless and enrolled at any point in the year.
 - Federal data lags about 2 years. NC DPI may have newer figures, but those are not the federal record.
 - To change the target districts, set `MV_DISTRICTS` in `.env`, or edit the defaults in `mckinney_vento/config.py`. Both use 7-digit NCES LEA IDs.
+
+## License
+
+The code is licensed under the [GNU General Public License v3.0](LICENSE).
+
+The data comes from U.S. federal sources (Department of Education, Census Bureau, NCES) and is in the public domain; the GPL doesn't cover it. Enrollment is retrieved through the Urban Institute Education Data Portal, which has its own [terms of use](https://educationdata.urban.org/documentation/).
