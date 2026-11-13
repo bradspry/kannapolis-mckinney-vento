@@ -36,7 +36,8 @@ class YearPage:
 
 
 def _select_options(html: str, name: str) -> dict[str, str]:
-    m = re.search(rf'<select[^>]*name="{name}"[^>]*>(.*?)</select>', html, re.S)
+    """Parse a dashboard <select> into {label: value} (e.g. "2022-2023" -> "2955")."""
+    m =re.search(rf'<select[^>]*name="{name}"[^>]*>(.*?)</select>', html, re.S)
     if not m:
         raise RuntimeError(f"Could not find <select name={name!r}> on Data Express page")
     return {label.strip(): value for value, label in
@@ -52,7 +53,8 @@ def discover() -> tuple[dict[str, str], dict[str, str]]:
 
 
 def _page_ids(sy_tid: str, state_tid: str, school_year: str) -> YearPage:
-    html, _ = get_text(EDX_BASE + EDX_DASHBOARD, params={"sy": sy_tid, "s": state_tid})
+    """Load the dashboard for one year/state and read the API ids from `paramnum` attributes."""
+    html, _ =get_text(EDX_BASE + EDX_DASHBOARD, params={"sy": sy_tid, "s": state_tid})
 
     def attr(pattern: str) -> str | None:
         m = re.search(pattern, html)
@@ -84,6 +86,7 @@ def _num(display: str | None) -> tuple[float | None, str]:
 
 
 def _subgrantee(raw: str | None) -> bool | None:
+    """Normalize subgrant status; wording changed from "Yes" to "McKinney-Vento Subgrantee" in 2019-20."""
     if raw is None:
         return None
     r = raw.strip().lower()
@@ -105,7 +108,11 @@ def _display(field: list | None) -> str | None:
 # --- Public pulls ----------------------------------------------------------------------
 
 def pull_lea_year(page: YearPage, state_tid: str, *, refresh: bool = False) -> pd.DataFrame:
-    """All LEAs in a state for one school year."""
+    """All LEAs in a state for one school year, one row per LEA.
+
+    Fields in the response: t0 homeless enrolled, t1 subgrant status,
+    t2 children 5-17 in poverty, t3 SAIPE poverty rate (%).
+    """
     url = f"{EDX_BASE}/api/v2/{page.dataset_id}/{page.primary_id}"
     cache = RAW_DIR / "edx" / f"state-{state_tid}" / f"lea_{page.school_year}.json"
     data = get_json_cached(url, cache, params={"sy": page.sy_tid, "s": state_tid, "type": "json"},

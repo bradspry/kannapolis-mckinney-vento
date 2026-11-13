@@ -14,6 +14,7 @@ from .http import get_json_cached
 
 def pull_enrollment(start_years: list[int], fips: str = STATE_FIPS, *,
                     refresh: bool = False, verbose: bool = True) -> pd.DataFrame:
+    """Enrollment for every LEA in a state, one row per LEA × year."""
     frames = []
     for year in start_years:
         url = URBAN_CCD_DIRECTORY.format(year=year)

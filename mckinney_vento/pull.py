@@ -13,7 +13,8 @@ from .config import PROCESSED_DIR, STATE_NAME
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    """Pull ED Data Express + CCD enrollment, write CSVs, print a data-quality summary."""
+    ap =argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--refresh", action="store_true", help="ignore cache and re-download")
     ap.add_argument("--state", default=STATE_NAME)
     args = ap.parse_args()
@@ -28,7 +29,7 @@ def main() -> None:
 
     print("NCES CCD enrollment (via Urban Institute Education Data API)")
     years = sorted(lea["school_year_start"].unique().tolist())
-    if args.state == STATE_NAME:
+    if args.state == STATE_NAME:   # CCD pull is keyed by FIPS, configured for NC only
         enr = ccd.pull_enrollment(years, refresh=args.refresh)
         enr.to_csv(PROCESSED_DIR / f"{slug}_lea_enrollment.csv", index=False)
 

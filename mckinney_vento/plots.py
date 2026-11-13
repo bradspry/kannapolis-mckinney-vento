@@ -37,6 +37,7 @@ SOURCE_NOTE = ("Source: U.S. Dept. of Education, ED Data Express (EDFacts FS 118
 
 
 def use_style() -> None:
+    """Apply house style: light surface, recessive y-grid only, thin lines, no chart junk."""
     plt.rcParams.update({
         "figure.facecolor": SURFACE, "axes.facecolor": SURFACE, "savefig.facecolor": SURFACE,
         "figure.dpi": 110, "savefig.dpi": 200, "savefig.bbox": "tight",
@@ -55,6 +56,7 @@ def _short_year(sy: str) -> str:
 
 
 def _shade_covid(ax, years: list[str]) -> None:
+    """Gray band + label behind the school years ED flags as COVID-affected."""
     idx = [i for i, y in enumerate(years) if y in COVID_YEARS]
     if idx:
         ax.axvspan(min(idx) - 0.5, max(idx) + 0.5, color=COVID_FILL, zorder=0, lw=0)
@@ -63,6 +65,7 @@ def _shade_covid(ax, years: list[str]) -> None:
 
 
 def _finish(fig, ax, years, title, subtitle, ylabel, save_as):
+    """Shared axes, titles, legend, source note; save to figures/ if `save_as` is given."""
     ax.set_xticks(range(len(years)), [_short_year(y) for y in years])
     ax.set_xlim(-0.5, len(years) - 0.5)
     ax.set_ylim(bottom=0)

@@ -9,15 +9,20 @@ from .config import COVID_YEARS, DISTRICTS, PROCESSED_DIR, STATE_NAME
 _SLUG = STATE_NAME.lower().replace(" ", "_")
 
 
+# leaid is read as text so leading zeros / 7-digit IDs survive.
+
 def load_lea() -> pd.DataFrame:
+    """Raw LEA × year homeless counts, subgrant status, and SAIPE poverty."""
     return pd.read_csv(PROCESSED_DIR / f"{_SLUG}_lea_homeless.csv", dtype={"leaid": str})
 
 
 def load_enrollment() -> pd.DataFrame:
+    """CCD enrollment by LEA × year."""
     return pd.read_csv(PROCESSED_DIR / f"{_SLUG}_lea_enrollment.csv", dtype={"leaid": str})
 
 
 def load_residence() -> pd.DataFrame:
+    """Statewide counts by primary nighttime residence × year."""
     return pd.read_csv(PROCESSED_DIR / f"{_SLUG}_state_residence.csv")
 
 

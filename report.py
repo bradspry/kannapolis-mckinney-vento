@@ -3,8 +3,10 @@
     python3 report.py          # -> figures/district_report.png
 """
 
+import textwrap
+
 import matplotlib
-matplotlib.use("Agg")
+matplotlib.use("Agg")   # render to file, no window
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
@@ -19,6 +21,7 @@ years = sorted(panel["school_year"].unique())
 first, latest = years[0], years[-1]
 
 # --- Snapshot numbers ------------------------------------------------------------------
+# Rank only LEAs with >=1,000 students and a reported count, so tiny charters don't skew it.
 cur = everyone[(everyone["school_year"] == latest) & everyone["enrollment"].ge(1000)
                & everyone["homeless_per_1000_enrolled"].notna()].copy()
 cur["rank"] = cur["homeless_per_1000_enrolled"].rank(ascending=False, method="min").astype(int)
@@ -28,6 +31,7 @@ nc_rate = state.loc[state["school_year"] == latest, "homeless_per_1000_enrolled"
 
 
 def row(name: str) -> list[str]:
+    """Formatted snapshot-table cells for one district (latest year vs. first year)."""
     g = panel[panel["district"] == name].set_index("school_year")
     a, b = g.loc[first], g.loc[latest]
     chg = (b.homeless_enrolled / a.homeless_enrolled - 1) * 100
@@ -48,7 +52,7 @@ def row(name: str) -> list[str]:
 names = [v["short"] for v in DISTRICTS.values()]
 table_rows = [row(n) for n in names]
 
-# --- Layout ----------------------------------------------------------------------------
+# --- Layout: header/takeaways, 3×2 chart grid, snapshot table --------------------------
 fig = plt.figure(figsize=(16, 19))
 gs = fig.add_gridspec(5, 2, height_ratios=[0.75, 1, 1, 1, 0.75], hspace=0.55, wspace=0.16,
                       left=0.05, right=0.95, top=0.95, bottom=0.05)
@@ -58,10 +62,16 @@ fig.text(0.05, 0.975, "Student homelessness & child poverty — Kannapolis, Caba
 fig.text(0.05, 0.961, f"McKinney-Vento identified students, school years {first} to {latest}, "
          "from federal EDFacts data (U.S. Dept. of Education)", fontsize=12, color=plots.TEXT_2)
 
-# Takeaways box
+# --- Key takeaways (numbers computed, so text stays true after a data refresh) ---------
 tk = fig.add_subplot(gs[0, :]); tk.axis("off")
 g = panel.set_index(["district", "school_year"])
-def v(d, y, c): return g.loc[(d, y), c]
+
+
+def v(district, year, col):
+    """Shorthand lookup: value of `col` for a district in a school year."""
+    return g.loc[(district, year), col]
+
+
 C, K, R = "Cabarrus", "Kannapolis", "Rowan-Salisbury"
 takeaways = [
     f"Cabarrus identified {v(C, latest, 'homeless_enrolled'):,.0f} homeless students in {latest}, up "
@@ -76,14 +86,14 @@ takeaways = [
     f"{v(R, latest, 'homeless_per_100_poor_children'):.1f} per 100 poor children — a possible under-identification signal.",
     "All three districts are McKinney-Vento subgrantees and reported un-suppressed counts in every year.",
 ]
-import textwrap
 tk.text(0, 1.0, "Key takeaways", fontsize=13, fontweight="bold", va="top", color=plots.TEXT)
 y = 0.80
-for t in takeaways:
+for t in takeaways:   # wrap manually; matplotlib's wrap=True ignores the axes width
     lines = textwrap.wrap(t, 165)
     tk.text(0.01, y, "•  " + "\n    ".join(lines), fontsize=11, va="top", color=plots.TEXT, linespacing=1.4)
     y -= 0.13 + 0.11 * len(lines)
 
+# --- Chart grid: (column, title, state reference line, label format, y-label) ----------
 specs = [
     ("homeless_enrolled", "Homeless students enrolled (count)", None, "{:,.0f}", "Students"),
     ("homeless_per_1000_enrolled", "Homeless students per 1,000 enrolled (dashed = NC)", state, "{:.1f}", "Per 1,000"),
@@ -96,14 +106,14 @@ for i, (col, title, st, fmt, yl) in enumerate(specs):
     ax = fig.add_subplot(gs[1 + i // 2, i % 2])
     plots.line_panel(ax, panel, col, years, title=title, state=st, label_fmt=fmt, ylabel=yl)
 
-# Shared legend
+# One shared legend for all six panels, placed between takeaways and charts
 handles = [Line2D([], [], color=plots.DISTRICT_COLORS[n], marker=plots.MARKERS[n], lw=2, label=n) for n in names]
 handles.append(Line2D([], [], color=plots.STATE_GRAY, ls="--", lw=1.5, label="North Carolina (statewide)"))
 handles.append(plt.Rectangle((0, 0), 1, 1, color=plots.COVID_FILL, label="COVID-affected years (ED flag)"))
 fig.legend(handles=handles, loc="lower left", ncol=5, bbox_to_anchor=(0.045, 0.792), fontsize=10.5)
 
-# Snapshot table
-tb = fig.add_subplot(gs[4, :]); tb.axis("off")
+# --- Snapshot table --------------------------------------------------------------------
+tb =fig.add_subplot(gs[4, :]); tb.axis("off")
 tb.set_title(f"Snapshot, {latest}", fontsize=13, fontweight="bold", loc="left", pad=6)
 cols = ["District", "Enrollment", "Homeless\nstudents", f"Change since\n{first}", "Per 1,000\nenrolled",
         "NC rank by rate\n(LEAs ≥1,000)", "Child poverty\nrate", "Children in\npoverty",
@@ -111,16 +121,17 @@ cols = ["District", "Enrollment", "Homeless\nstudents", f"Change since\n{first}"
 t = tb.table(cellText=table_rows, colLabels=cols, loc="upper center", cellLoc="center",
              colWidths=[0.17, 0.08, 0.08, 0.09, 0.08, 0.10, 0.08, 0.08, 0.12, 0.07])
 t.auto_set_font_size(False); t.set_fontsize(10.5); t.scale(1, 2.6)
-for (r, c), cell in t.get_celld().items():
+for (r, c), cell in t.get_celld().items():   # quiet borders; bold header row and district names
     cell.set_edgecolor(plots.GRID)
     cell.set_facecolor(plots.SURFACE)
     if r == 0:
         cell.set_text_props(fontweight="bold", color=plots.TEXT_2, fontsize=9.5)
-        cell.set_height(cell.get_height() * 1.25)
+        cell.set_height(cell.get_height() * 1.25)   # room for two-line headers
     elif c == 0:
         cell.set_text_props(ha="left", color=plots.TEXT, fontweight="bold")
         cell.PAD = 0.03
 
+# --- Footnotes & save ------------------------------------------------------------------
 notes = (
     "Notes: Homeless counts are cumulative (any time during the year) per EDFacts FS 118. Rates use NCES CCD fall enrollment. "
     "“Per 100 children in poverty” compares two different populations (enrolled homeless students vs. Census estimate of resident children 5–17 in poverty) "
