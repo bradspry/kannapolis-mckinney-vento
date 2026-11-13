@@ -1,0 +1,51 @@
+school_year,school_year_start,residence_detail,students,status,residence
+2013-2014,2013,Doubled-up,18645.0,reported,Doubled-up
+2014-2015,2014,Doubled-up,19891.0,reported,Doubled-up
+2015-2016,2015,Doubled-up,19131.0,reported,Doubled-up
+2016-2017,2016,Doubled-up,21118.0,reported,Doubled-up
+2017-2018,2017,Doubled-up,21097.0,reported,Doubled-up
+2018-2019,2018,Doubled-up,25234.0,reported,Doubled-up
+2019-2020,2019,Doubled-up,19593.0,reported,Doubled-up
+2020-2021,2020,Doubled-up,16065.0,reported,Doubled-up
+2021-2022,2021,Doubled-up,20047.0,reported,Doubled-up
+2022-2023,2022,Doubled-up,23538.0,reported,Doubled-up
+2013-2014,2013,Hotels/motels,2665.0,reported,Hotels / motels
+2014-2015,2014,Hotels/motels,3160.0,reported,Hotels / motels
+2015-2016,2015,Hotels/motels,3565.0,reported,Hotels / motels
+2016-2017,2016,Hotels/motels,4474.0,reported,Hotels / motels
+2017-2018,2017,Hotels/motels,4252.0,reported,Hotels / motels
+2018-2019,2018,Hotels/motels,4986.0,reported,Hotels / motels
+2019-2020,2019,Hotels/motels,4326.0,reported,Hotels / motels
+2020-2021,2020,Hotels/motels,4208.0,reported,Hotels / motels
+2021-2022,2021,Hotels/motels,5608.0,reported,Hotels / motels
+2022-2023,2022,Hotels/motels,6218.0,reported,Hotels / motels
+2013-2014,2013,"Shelters transitional housing, awaiting foster care",2453.0,reported,Shelters / transitional housing
+2014-2015,2014,"Shelters transitional housing, awaiting foster care",2832.0,reported,Shelters / transitional housing
+2015-2016,2015,"Shelters transitional housing, awaiting foster care",2667.0,reported,Shelters / transitional housing
+2016-2017,2016,"Shelters transitional housing, awaiting foster care",2011.0,reported,Shelters / transitional housing
+2017-2018,2017,"Shelters transitional housing, awaiting foster care",,not_available,Shelters / transitional housing
+2018-2019,2018,"Shelters transitional housing, awaiting foster care",,not_available,Shelters / transitional housing
+2019-2020,2019,"Shelters transitional housing, awaiting foster care",,not_available,Shelters / transitional housing
+2020-2021,2020,"Shelters transitional housing, awaiting foster care",,not_available,Shelters / transitional housing
+2021-2022,2021,"Shelters transitional housing, awaiting foster care",,not_available,Shelters / transitional housing
+2022-2023,2022,"Shelters transitional housing, awaiting foster care",,not_available,Shelters / transitional housing
+2013-2014,2013,Shelters transitional housing,,not_available,Shelters / transitional housing
+2014-2015,2014,Shelters transitional housing,,not_available,Shelters / transitional housing
+2015-2016,2015,Shelters transitional housing,,not_available,Shelters / transitional housing
+2016-2017,2016,Shelters transitional housing,798.0,reported,Shelters / transitional housing
+2017-2018,2017,Shelters transitional housing,2466.0,reported,Shelters / transitional housing
+2018-2019,2018,Shelters transitional housing,3334.0,reported,Shelters / transitional housing
+2019-2020,2019,Shelters transitional housing,2257.0,reported,Shelters / transitional housing
+2020-2021,2020,Shelters transitional housing,1487.0,reported,Shelters / transitional housing
+2021-2022,2021,Shelters transitional housing,1944.0,reported,Shelters / transitional housing
+2022-2023,2022,Shelters transitional housing,2282.0,reported,Shelters / transitional housing
+2013-2014,2013,Unsheltered,744.0,reported,Unsheltered
+2014-2015,2014,Unsheltered,886.0,reported,Unsheltered
+2015-2016,2015,Unsheltered,1163.0,reported,Unsheltered
+2016-2017,2016,Unsheltered,1144.0,reported,Unsheltered
+2017-2018,2017,Unsheltered,1088.0,reported,Unsheltered
+2018-2019,2018,Unsheltered,1211.0,reported,Unsheltered
+2019-2020,2019,Unsheltered,897.0,reported,Unsheltered
+2020-2021,2020,Unsheltered,922.0,reported,Unsheltered
+2021-2022,2021,Unsheltered,1032.0,reported,Unsheltered
+2022-2023,2022,Unsheltered,1205.0,reported,Unsheltered

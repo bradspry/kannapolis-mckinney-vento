@@ -1,0 +1,4 @@
+pandas>=2.2
+matplotlib>=3.9
+requests>=2.32
+python-dotenv>=1.0
